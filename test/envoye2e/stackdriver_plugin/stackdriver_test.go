@@ -263,15 +263,12 @@ func TestStackdriverReload(t *testing.T) {
 }
 
 func TestStackdriverVMReload(t *testing.T) {
-	t.Skip("See issue https://github.com/istio/istio/issues/26548")
-	t.Parallel()
-	env.SkipTSanASan(t)
 	params := driver.NewTestParams(t, map[string]string{
 		"ServiceAuthenticationPolicy": "NONE",
 		"SDLogStatusCode":             "200",
 		"StackdriverRootCAFile":       driver.TestPath("testdata/certs/stackdriver.pem"),
 		"StackdriverTokenFile":        driver.TestPath("testdata/certs/access-token"),
-		"ReloadVM":                    "true",
+		//		"ReloadVM":                    "true",
 	}, envoye2e.ProxyE2ETests)
 	sdPort := params.Ports.Max + 1
 	stsPort := params.Ports.Max + 2
@@ -299,27 +296,60 @@ func TestStackdriverVMReload(t *testing.T) {
 			&driver.Sleep{1 * time.Second},
 			&driver.Repeat{N: 10, Step: driver.Get(params.Ports.ClientPort, "hello, world!")},
 			&driver.Sleep{1 * time.Second},
-			&driver.Update{Node: "client", Version: "1", Listeners: []string{
-				driver.LoadTestData("testdata/listener/client.yaml.tmpl"),
-			}},
-			&driver.Update{Node: "server", Version: "1", Listeners: []string{
-				driver.LoadTestData("testdata/listener/server.yaml.tmpl"),
-			}},
-			sd.Check(params,
-				[]string{"testdata/stackdriver/client_request_count.yaml.tmpl", "testdata/stackdriver/server_request_count.yaml.tmpl"},
-				[]SDLogEntry{
-					{
-						LogBaseFile:   "testdata/stackdriver/server_access_log.yaml.tmpl",
-						LogEntryFile:  []string{"testdata/stackdriver/server_access_log_entry.yaml.tmpl"},
-						LogEntryCount: 10,
-					},
-					{
-						LogBaseFile:   "testdata/stackdriver/client_access_log.yaml.tmpl",
-						LogEntryFile:  []string{"testdata/stackdriver/client_access_log_entry.yaml.tmpl"},
-						LogEntryCount: 10,
-					},
-				}, true,
-			),
+			&driver.Repeat{
+				Duration: 60 * time.Second,
+				Step: &driver.Scenario{
+					[]driver.Step{
+						&driver.Update{Node: "client", Version: "{{.N}}", Listeners: []string{
+							driver.LoadTestData("testdata/listener/client.yaml.tmpl"),
+						}},
+						&driver.Update{Node: "server", Version: "{{.N}}", Listeners: []string{
+							driver.LoadTestData("testdata/listener/server.yaml.tmpl"),
+						}},
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+						driver.Get(params.Ports.ClientPort, "hello, world!"),
+					}},
+			},
 		},
 	}).Run(params); err != nil {
 		t.Fatal(err)

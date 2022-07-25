@@ -17,9 +17,7 @@ package driver
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
-	"net/http/httputil"
 	"time"
 )
 
@@ -71,8 +69,8 @@ func (g *HTTPCall) Run(_ *Params) error {
 	for key, val := range g.RequestHeaders {
 		req.Header.Add(key, val)
 	}
-	dump, _ := httputil.DumpRequest(req, false)
-	log.Printf("HTTP request:\n%s", string(dump))
+	//dump, _ := httputil.DumpRequest(req, false)
+	//log.Printf("HTTP request:\n%s", string(dump))
 
 	client := &http.Client{Timeout: g.Timeout}
 	if g.DisableRedirect {

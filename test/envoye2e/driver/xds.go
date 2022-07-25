@@ -73,19 +73,19 @@ func (x *XDS) Cleanup() {
 }
 
 func (x *XDS) Debugf(format string, args ...interface{}) {
-	log.Printf("xds debug: "+format, args...)
+	//log.Printf("xds debug: "+format, args...)
 }
 
 func (x *XDS) Infof(format string, args ...interface{}) {
-	log.Printf("xds: "+format, args...)
+	//log.Printf("xds: "+format, args...)
 }
 
 func (x *XDS) Errorf(format string, args ...interface{}) {
-	log.Printf("xds error: "+format, args...)
+	//log.Printf("xds error: "+format, args...)
 }
 
 func (x *XDS) Warnf(format string, args ...interface{}) {
-	log.Printf("xds warn: "+format, args...)
+	//log.Printf("xds warn: "+format, args...)
 }
 
 type Update struct {
@@ -103,7 +103,7 @@ func (u *Update) Run(p *Params) error {
 	if err != nil {
 		return err
 	}
-	log.Printf("update config for %q with version %q", u.Node, version)
+	//log.Printf("update config for %q with version %q", u.Node, version)
 
 	clusters := make([]types.Resource, 0, len(u.Clusters))
 	for _, cluster := range u.Clusters {

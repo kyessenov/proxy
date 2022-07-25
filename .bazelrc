@@ -25,7 +25,7 @@ build --define path_normalization_by_default=true
 build --define tcmalloc=gperftools
 
 # Build with embedded V8-based WebAssembly runtime.
-build --define wasm=v8
+# build --define wasm=v8
 
 # Build Proxy-WASM plugins as native extensions.
 build --copt -DNULL_PLUGIN

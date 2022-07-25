@@ -16,7 +16,6 @@ package driver
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"reflect"
 	"strings"
@@ -107,7 +106,7 @@ func (r *Repeat) Run(p *Params) error {
 			if time.Since(start) >= r.Duration {
 				break
 			}
-			log.Printf("repeat %d elapsed %v out of %v", p.N, time.Since(start), r.Duration)
+			//log.Printf("repeat %d elapsed %v out of %v", p.N, time.Since(start), r.Duration)
 			if err := r.Step.Run(p); err != nil {
 				return err
 			}
@@ -115,7 +114,7 @@ func (r *Repeat) Run(p *Params) error {
 		}
 	} else {
 		for i := 0; i < r.N; i++ {
-			log.Printf("repeat %d out of %d", i, r.N)
+			//log.Printf("repeat %d out of %d", i, r.N)
 			p.N = i
 			if err := r.Step.Run(p); err != nil {
 				return err
@@ -236,6 +235,5 @@ func (p *Params) FillYAML(input string, pb legacyproto.Message) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(out)
 	return ReadYAML(out, pb)
 }

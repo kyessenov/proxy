@@ -361,6 +361,7 @@ func NewFakeStackdriver(port uint16, delay time.Duration,
 			func(ctx context.Context, req interface{},
 				_ *grpc.UnaryServerInfo, handler grpc.UnaryHandler,
 			) (interface{}, error) {
+				time.Sleep(3 * time.Second)
 				md, ok := metadata.FromIncomingContext(ctx)
 				if !ok {
 					return nil, fmt.Errorf("missing metadata, want %q and x-goog-user-project", bearer)
